@@ -22,8 +22,14 @@ width, height = 1200, 800
 win = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 pygame.display.set_caption("Snake!")
 
+# Define gamespeed
+gamespeed = 10
+
+
 fpsClock = pygame.time.Clock()
 
+def roundToNearestMultiple(number, multiple):
+	return number - (number%multiple)
 
 def updateWindow():
 	'''
@@ -34,11 +40,12 @@ def updateWindow():
 		if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
 			sys.exit(0)
 		if event.type == pygame.QUIT:
+			pygame.quit()
 			sys.exit(0)
 		elif event.type == pygame.VIDEORESIZE:
 				width, height = event.size
 				if debug:
-					print('resizing to', width, height)
+					print('[*] resizing to', width, height)
 
 	pygame.display.update()
 

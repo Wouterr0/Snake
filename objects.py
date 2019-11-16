@@ -5,7 +5,7 @@ import pygame
 import config as cfg
 
 
-class Box(cfg.pygame.Rect):
+class Box(pygame.Rect):
 	'''
 	The Box object represents on box on a grid
 
@@ -13,17 +13,18 @@ class Box(cfg.pygame.Rect):
 	def __init__(self, x, y, w, h, lineWidth, color=cfg.GREEN):
 		self.color = color
 		self.edgeColor = cfg.DARK_GREEN
+		
 		self.x = int(x)
 		self.y = int(y)
 		self.width = w
 		self.height = h
-		self.isBodyPart = False
+
 		self.lineWidth = int(lineWidth)
 		super().__init__(self.x, self.y, self.width, self.height)
 	
-	def draw(self, surface: cfg.pygame.Surface):
-		cfg.pygame.draw.rect(surface, self.color, self)
-		cfg.pygame.draw.rect(surface, self.edgeColor, self, self.lineWidth)
+	def draw(self, surface: pygame.Surface):
+		pygame.draw.rect(surface, self.color, self)							# Draw box
+		pygame.draw.rect(surface, self.edgeColor, self, self.lineWidth)		# Draw border
 
 
 
@@ -64,7 +65,7 @@ class Grid:
 				self.boxes[row, column] = Box(self.x+self.boxWidth*column, self.y+self.boxHeight*row, self.boxWidth, self.boxHeight, self.width//150+1)
 
 
-	def draw(self, surface: cfg.pygame.Surface):
+	def draw(self, surface: pygame.Surface):
 		'''
 		Draws all the boxes in the grid
 		
@@ -77,24 +78,44 @@ class Grid:
 
 
 class Snake:
-	def __init__(self, shape, grid: Grid, colors):
+	def __init__(self, shape, facing, grid: Grid, colors):
 		self.grid = grid
 		self.length = len(shape)
-		self.facing = (0, 1)
-		self.shape = shape
-		self.body = np.empty((len(shape)), dtype=Box)
+		self.shape = np.array(shape)
+		self.facing = np.array(facing)
 		self.colors = colors
 
 		self.updateBody()
 
 
 	def updateBody(self):
+		self.body = np.empty((len(self.shape)), dtype=Box)
 		i = 0
 		for x, y in self.shape:
 			self.body[i] = self.grid[y][x]
 			i+=1
 
 	def draw(self):
+		self.updateBody()
 		for i, rect in enumerate(self.body):
 			pygame.draw.rect(cfg.win, self.colors[i], rect)
+
+	def tick(self):
+		for i in range(len(self.shape)):
+			self.shape[i] = np.add(self.shape[i], self.facing[i])
+		self.facing[1:] = self.facing[:-1]
+
+		if any(shape[0] < 0 or shape[0] >= self.grid.rows or shape[1] < 0 or shape[1] >= self.grid.columns for shape in self.shape):
+			return 1
+		self.updateBody()
+	
+	def eat(self, newColor, amount=1):
+		print(f"[*] growing by {amount}")
+		for _ in range(amount):
+			# self.shape = self.shape, self.facing[-1]))
+			self.shape = np.vstack((self.shape, np.add(np.multiply(self.facing[-1], -1), self.shape[-1])))
+			self.facing = np.vstack((self.facing, self.facing[-1]))
+			self.colors = np.vstack((self.colors, newColor))
+
+		self.updateBody()
 
