@@ -105,7 +105,7 @@ class Snake:
 			self.shape[i] = np.add(self.shape[i], self.facing[i])
 		self.facing[1:] = self.facing[:-1]
 
-		if any(shape[0] < 0 or shape[0] >= self.grid.rows or shape[1] < 0 or shape[1] >= self.grid.columns for shape in self.shape):
+		if any(shape[0] < 0 or shape[0] >= self.grid.rows or shape[1] < 0 or shape[1] >= self.grid.columns for shape in self.shape) or not cfg.unique(self.shape.tolist()):
 			return 1
 		self.updateBody()
 	

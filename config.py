@@ -31,6 +31,15 @@ fpsClock = pygame.time.Clock()
 def roundToNearestMultiple(number, multiple):
 	return number - (number%multiple)
 
+def unique(num_list):
+	seen = []
+	for i in num_list:
+		if i not in seen:
+			seen.append(i)
+		else:
+			return False
+	return True
+
 def updateWindow():
 	'''
 	This function checks if the player has quited the game so the pygame window exits instead of crash. Also this function updates the window and handles the resizing of the window. This function needs to be executed every game tick.
