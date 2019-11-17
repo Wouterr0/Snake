@@ -42,13 +42,13 @@ while True:
 
 	keys = pygame.key.get_pressed()
 
-	if keys[pygame.K_w] or keys[pygame.K_UP]:
+	if keys[pygame.K_w] or keys[pygame.K_UP] and snake.facing[0].tolist() != [0, 1]:
 		snake.facing[0] = [0, -1]
-	if keys[pygame.K_a] or keys[pygame.K_LEFT]:
+	if keys[pygame.K_a] or keys[pygame.K_LEFT] and snake.facing[0].tolist() != [1, 0]:
 		snake.facing[0] = [-1, 0]
-	if keys[pygame.K_s] or keys[pygame.K_DOWN]:
+	if keys[pygame.K_s] or keys[pygame.K_DOWN] and snake.facing[0].tolist() != [0, -1]:
 		snake.facing[0] = [0, 1]
-	if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+	if keys[pygame.K_d] or keys[pygame.K_RIGHT] and snake.facing[0].tolist() != [-1, 0]:
 		snake.facing[0] = [1, 0]
 	
 
