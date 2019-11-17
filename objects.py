@@ -57,8 +57,8 @@ class Grid:
 
 	def updateBoxes(self):
 		self.boxes = np.ndarray((self.rows, self.columns), dtype=Box)
-		self.boxWidth = self.width/self.columns
-		self.boxHeight = self.height/self.rows
+		self.boxWidth = self.width//self.columns
+		self.boxHeight = self.height//self.rows
 
 		for row in range(self.rows):
 			for column in range(self.columns):
