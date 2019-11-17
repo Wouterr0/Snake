@@ -119,3 +119,18 @@ class Snake:
 
 		self.updateBody()
 
+
+class Apple(pygame.Rect):
+	def __init__(self, x, y, w, h, img):
+		self.x = x
+		self.y = y
+		self.width = w
+		self.height = h
+		
+		self.image = img
+		super().__init__(self.x, self.y, self.width, self.height)
+
+	def draw(self):
+		img = self.image.resize((self.width, self.height))
+		cfg.win.blit(cfg.PIL_to_surface(img), (self.x, self.y))
+

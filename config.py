@@ -1,7 +1,21 @@
 import os
 import sys
 
+from PIL import Image
 import pygame
+
+
+def surface_to_PIL(surface):
+	raw_str = pygame.image.tostring(surface, "RGBA", False)
+	surface = Image.frombytes("RGBA", surface.get_size(), raw_str)
+	return image
+
+
+def PIL_to_surface(surface):
+	raw_str = surface.tobytes("raw", "RGBA")
+	surface = pygame.image.fromstring(raw_str, surface.size, "RGBA")
+	return surface
+
 
 
 # Initialize Pygame
@@ -21,6 +35,11 @@ if debug:
 width, height = 1200, 800
 win = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 pygame.display.set_caption("Snake!")
+
+# Load resources
+apple_image = Image.open("resources/apple.png")
+
+
 
 # Define gamespeed
 gamespeed = 10
