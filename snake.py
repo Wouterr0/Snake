@@ -15,10 +15,10 @@ grid.updateBoxes()
 
 # Snake
 snake = obj.Snake(
-	((4, grid.rows//2), (3, grid.rows//2), (2, grid.rows//2), (1, grid.rows//2)),
-	((1, 0), (1, 0), (1, 0), (1, 0)),
+	[(initSnakeLength-i+1, grid.rows//2) for i in range(initSnakeLength)],				#((4, grid.rows//2), (3, grid.rows//2), (2, grid.rows//2), (1, grid.rows//2)),
+	(np.tile((1, 0), (initSnakeLength, 1))),
 	grid,
-	np.full((4, 4), RED, dtype=np.uint8)
+	mapArrayToRainBow(np.linspace(0, 1, initSnakeLength))
 )
 
 
@@ -30,7 +30,7 @@ while True:
 	from config import *
 
 	newTimePast = roundToNearestMultiple(time.time()-start, 1/gamespeed)
-	if newTimePast != timePast:			# New game tick
+	if newTimePast != timePast:															# New game tick
 		print("[*] tick", round(timePast, 5))
 		if snake.tick():
 			break

@@ -86,8 +86,11 @@ class Snake:
 		self.length = len(shape)
 		self.shape = np.array(shape)
 		self.facing = np.array(facing)
-		self.apple = None
 		self.colors = colors
+		self.apple = None
+
+		# Check if the length of shape, facing and colors are equal
+		assert len(self.shape)==len(self.facing)==len(self.colors), f"Snake has a len(self.shape)={len(self.shape)} but len(self.facing)={len(self.facing)} but len(self.colors)={len(self.colors)}"
 
 		self.updateBody()
 		self.generateApple()
@@ -116,7 +119,7 @@ class Snake:
 			return 1
 
 		if self.grid.boxes[self.shape[0][1], self.shape[0][0]] == self.grid.boxes[self.apple.column, self.apple.row]:
-			self.grow(np.vstack((self.colors, cfg.RED)))
+			self.grow(cfg.mapArrayToRainBow(np.linspace(0, 1, len(self.colors)+1)))
 			self.generateApple()
 
 		self.updateBody()

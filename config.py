@@ -1,7 +1,10 @@
 import os
 import sys
+import colorsys
+
 
 from PIL import Image
+import numpy as np
 import pygame
 
 
@@ -40,9 +43,11 @@ pygame.display.set_caption("Snake!")
 apple_image = Image.open("resources/apple.png")
 
 
+initSnakeLength = 4
+
 
 # Define gamespeed
-gamespeed = 10
+gamespeed = 7.5
 
 
 fpsClock = pygame.time.Clock()
@@ -77,23 +82,30 @@ def updateWindow():
 
 	pygame.display.update()
 
-
+def mapArrayToRainBow(arr):
+	new = np.zeros((*arr.shape, 3))
+	new[:,0] = arr															# Make a new array in the RGB shape (..., 3)
+	for i in range(len(arr)):
+		new[i] = np.array(colorsys.hsv_to_rgb(new[i][0], 1, 1))*255			# Convert hue to RGB
+	new = np.array(new, dtype=np.uint8)
+	return new.tolist()
+	
 
 # Define common colors
-WHITE = (255, 255, 255, 255)
-GREY = (127, 127, 127, 255)
-BLACK = (0, 0, 0, 255)
-FUCHSIA = (255, 0, 255, 255)
-RED = (255, 0, 0, 255)
-ORANGE = (255, 127, 0, 255)
-JELLOW = (255, 255, 0, 255)
-GREEN = (0, 255, 0, 255)
-AQUA = (0, 255, 255, 255)
-BLUE = (0, 0, 255, 255)
-PURPLE = (255, 0, 255, 255)
-DARK_RED = (127, 0, 0, 255)
-DARK_GREEN = (0, 127, 0, 255)
-DARK_BLUE = (0, 0, 127, 255)
-LIGHT_RED = (255, 127, 127, 255)
-LIGHT_GREEN = (127, 255, 127, 255)
-LIGHT_BLUE = (127, 127, 255, 255)
+WHITE = (255, 255, 255)
+GREY = (127, 127, 127)
+BLACK = (0, 0, 0)
+FUCHSIA = (255, 0, 255)
+RED = (255, 0, 0)
+ORANGE = (255, 127, 0)
+JELLOW = (255, 255, 0)
+GREEN = (0, 255, 0)
+AQUA = (0, 255, 255)
+BLUE = (0, 0, 255)
+PURPLE = (255, 0, 255)
+DARK_RED = (127, 0, 0)
+DARK_GREEN = (0, 127, 0)
+DARK_BLUE = (0, 0, 127)
+LIGHT_RED = (255, 127, 127)
+LIGHT_GREEN = (127, 255, 127)
+LIGHT_BLUE = (127, 127, 255)
