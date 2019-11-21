@@ -1,5 +1,6 @@
-import numpy as np
+import random
 
+import numpy as np
 import pygame
 
 import config as cfg
@@ -28,6 +29,7 @@ class Box(pygame.Rect):
 
 
 
+
 class Grid:
 	'''
 	The Grid object represents a grid full of boxes
@@ -37,8 +39,8 @@ class Grid:
 		self.x = x
 		self.y = y
 
-		self.width = w
-		self.height = h
+		self.width = int(w)
+		self.height = int(h)
 
 		self.rows = int(rows)
 		self.columns = int(cols)
@@ -77,15 +79,18 @@ class Grid:
 
 
 
+
 class Snake:
 	def __init__(self, shape, facing, grid: Grid, colors):
 		self.grid = grid
 		self.length = len(shape)
 		self.shape = np.array(shape)
 		self.facing = np.array(facing)
+		self.apple = None
 		self.colors = colors
 
 		self.updateBody()
+		self.generateApple()
 
 
 	def updateBody(self):
@@ -99,38 +104,51 @@ class Snake:
 		self.updateBody()
 		for i, rect in enumerate(self.body):
 			pygame.draw.rect(cfg.win, self.colors[i], rect)
+		if self.apple:
+			self.apple.draw()
 
 	def tick(self):
 		for i in range(len(self.shape)):
 			self.shape[i] = np.add(self.shape[i], self.facing[i])
 		self.facing[1:] = self.facing[:-1]
 
-		if any(shape[0] < 0 or shape[0] >= self.grid.rows or shape[1] < 0 or shape[1] >= self.grid.columns for shape in self.shape) or not cfg.unique(self.shape.tolist()):
+		if any(pos[0] < 0 or pos[0] >= self.grid.rows or pos[1] < 0 or pos[1] >= self.grid.columns for pos in self.shape) or not cfg.unique(self.shape.tolist()):
 			return 1
+
+		if self.grid.boxes[self.shape[0][1], self.shape[0][0]] == self.grid.boxes[self.apple.column, self.apple.row]:
+			print("EAT")
+
 		self.updateBody()
+
+	def generateApple(self, amount=1):
+		possibleSpawnLocations = np.dstack(np.mgrid[0:self.grid.columns, 0:self.grid.rows])
+		mask = np.zeros((self.grid.rows, self.grid.columns), dtype=bool)
+		mask[self.shape.T[0], self.shape.T[1]] = True
+		possibleSpawnLocations = possibleSpawnLocations[~mask]
+		self.apple = Apple(*random.choice(possibleSpawnLocations), self.grid)
 	
-	def eat(self, newColor, amount=1):
+	
+	def eat(self, newColors, amount=1):
 		print(f"[*] growing by {amount}")
 		for _ in range(amount):
-			# self.shape = self.shape, self.facing[-1]))
 			self.shape = np.vstack((self.shape, np.add(np.multiply(self.facing[-1], -1), self.shape[-1])))
 			self.facing = np.vstack((self.facing, self.facing[-1]))
-			self.colors = np.vstack((self.colors, newColor))
+			self.colors = newColors
 
 		self.updateBody()
 
 
-class Apple(pygame.Rect):
-	def __init__(self, x, y, w, h, img):
-		self.x = x
-		self.y = y
-		self.width = w
-		self.height = h
-		
+
+
+class Apple:
+	def __init__(self, column, row, grid, img=cfg.apple_image):
+		self.column = column
+		self.row = row
+		self.grid = grid
+
 		self.image = img
-		super().__init__(self.x, self.y, self.width, self.height)
 
 	def draw(self):
-		img = self.image.resize((self.width, self.height))
-		cfg.win.blit(cfg.PIL_to_surface(img), (self.x, self.y))
+		img = self.image.resize((int(self.grid.boxWidth), int(self.grid.boxHeight)))
+		cfg.win.blit(cfg.PIL_to_surface(img), self.grid[self.column, self.row])
 

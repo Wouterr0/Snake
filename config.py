@@ -32,7 +32,7 @@ if debug:
 	print("<--------------------------------------------- BEGIN --------------------------------------------->")
 
 # Screen settings
-width, height = 1200, 800
+width, height = 600, 400
 win = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 pygame.display.set_caption("Snake!")
 
