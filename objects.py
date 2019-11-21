@@ -116,7 +116,8 @@ class Snake:
 			return 1
 
 		if self.grid.boxes[self.shape[0][1], self.shape[0][0]] == self.grid.boxes[self.apple.column, self.apple.row]:
-			print("EAT")
+			self.grow(np.vstack((self.colors, cfg.RED)))
+			self.generateApple()
 
 		self.updateBody()
 
@@ -128,7 +129,7 @@ class Snake:
 		self.apple = Apple(*random.choice(possibleSpawnLocations), self.grid)
 	
 	
-	def eat(self, newColors, amount=1):
+	def grow(self, newColors, amount=1):
 		print(f"[*] growing by {amount}")
 		for _ in range(amount):
 			self.shape = np.vstack((self.shape, np.add(np.multiply(self.facing[-1], -1), self.shape[-1])))

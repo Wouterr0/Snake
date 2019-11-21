@@ -8,7 +8,7 @@ import pygame
 def surface_to_PIL(surface):
 	raw_str = pygame.image.tostring(surface, "RGBA", False)
 	surface = Image.frombytes("RGBA", surface.get_size(), raw_str)
-	return image
+	return surface
 
 
 def PIL_to_surface(surface):
@@ -32,7 +32,7 @@ if debug:
 	print("<--------------------------------------------- BEGIN --------------------------------------------->")
 
 # Screen settings
-width, height = 600, 400
+width, height = 800, 800
 win = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 pygame.display.set_caption("Snake!")
 

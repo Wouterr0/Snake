@@ -36,9 +36,6 @@ while True:
 			break
 		timePast = newTimePast
 	
-		if pygame.key.get_pressed()[pygame.K_SPACE]:
-			snake.eat(np.vstack((snake.colors, RED)))
-	
 
 	keys = pygame.key.get_pressed()
 
