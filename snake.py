@@ -16,7 +16,7 @@ grid.updateBoxes()
 # Snake
 snake = obj.Snake(
 	((4, grid.rows//2), (3, grid.rows//2), (2, grid.rows//2), (1, grid.rows//2)),
-	((0, -1), (1, 0), (1, 0), (1, 0)),
+	((1, 0), (1, 0), (1, 0), (1, 0)),
 	grid,
 	np.full((4, 4), RED, dtype=np.uint8)
 )
@@ -35,9 +35,6 @@ while True:
 		if snake.tick():
 			break
 		timePast = newTimePast
-	
-		if pygame.key.get_pressed()[pygame.K_SPACE]:
-			snake.eat((RED))
 	
 
 	keys = pygame.key.get_pressed()
