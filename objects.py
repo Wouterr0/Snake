@@ -127,7 +127,7 @@ class Snake:
 	def generateApple(self, amount=1):
 		possibleSpawnLocations = np.dstack(np.mgrid[0:self.grid.columns, 0:self.grid.rows])
 		mask = np.zeros((self.grid.rows, self.grid.columns), dtype=bool)
-		mask[self.shape.T[0], self.shape.T[1]] = True
+		mask[self.shape.T[1], self.shape.T[0]] = True
 		possibleSpawnLocations = possibleSpawnLocations[~mask]
 		self.apple = Apple(*random.choice(possibleSpawnLocations), self.grid)
 	
