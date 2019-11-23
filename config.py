@@ -47,7 +47,7 @@ initSnakeLength = 4
 
 
 # Define gamespeed
-gamespeed = 7.5
+gamespeed = 10
 
 
 fpsClock = pygame.time.Clock()

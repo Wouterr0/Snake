@@ -21,6 +21,8 @@ snake = obj.Snake(
 	mapArrayToRainBow(np.linspace(0, 1, initSnakeLength))
 )
 
+newFacing = snake.facing[0]
+
 
 start = time.time()
 timePast = 0
@@ -32,6 +34,7 @@ while True:
 	newTimePast = roundToNearestMultiple(time.time()-start, 1/gamespeed)
 	if newTimePast != timePast:															# New game tick
 		print("[*] tick", round(timePast, 5))
+		snake.facing[0] = newFacing
 		if snake.tick():
 			break
 		timePast = newTimePast
@@ -40,13 +43,13 @@ while True:
 	keys = pygame.key.get_pressed()
 
 	if keys[pygame.K_w] or keys[pygame.K_UP] and snake.facing[0].tolist() != [0, 1]:
-		snake.facing[0] = [0, -1]
+		newFacing = [0, -1]
 	if keys[pygame.K_a] or keys[pygame.K_LEFT] and snake.facing[0].tolist() != [1, 0]:
-		snake.facing[0] = [-1, 0]
+		newFacing = [-1, 0]
 	if keys[pygame.K_s] or keys[pygame.K_DOWN] and snake.facing[0].tolist() != [0, -1]:
-		snake.facing[0] = [0, 1]
+		newFacing = [0, 1]
 	if keys[pygame.K_d] or keys[pygame.K_RIGHT] and snake.facing[0].tolist() != [-1, 0]:
-		snake.facing[0] = [1, 0]
+		newFacing = [1, 0]
 	
 
 
