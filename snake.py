@@ -18,7 +18,7 @@ snake = obj.Snake(
 	[(initSnakeLength-i+1, grid.rows//2) for i in range(initSnakeLength)],				#((4, grid.rows//2), (3, grid.rows//2), (2, grid.rows//2), (1, grid.rows//2)),
 	(np.tile((1, 0), (initSnakeLength, 1))),
 	grid,
-	mapArrayToRainBow(np.linspace(0, 1, initSnakeLength))
+	mapArrayToRainBow(np.linspace(0, 1, initSnakeLength), initSnakeLength)
 )
 
 newFacing = snake.facing[0]
@@ -51,10 +51,6 @@ while True:
 	if keys[pygame.K_d] or keys[pygame.K_RIGHT] and snake.facing[0].tolist() != [-1, 0]:
 		newFacing = [1, 0]
 	
-
-
-	# Making sure that the game plays at a stable fps
-	fpsClock.tick(60)
 
 	# Fill the background
 	win.fill(BLACK)

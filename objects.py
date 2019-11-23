@@ -83,7 +83,6 @@ class Grid:
 class Snake:
 	def __init__(self, shape, facing, grid: Grid, colors):
 		self.grid = grid
-		self.length = len(shape)
 		self.shape = np.array(shape)
 		self.facing = np.array(facing)
 		self.colors = colors
@@ -119,7 +118,7 @@ class Snake:
 			return 1
 
 		if self.grid.boxes[self.shape[0][1], self.shape[0][0]] == self.grid.boxes[self.apple.column, self.apple.row]:
-			self.grow(cfg.mapArrayToRainBow(np.linspace(0, 1, len(self.colors)+1)))
+			self.grow(cfg.mapArrayToRainBow(np.linspace(0, 1, len(self.colors)+1), len(self.shape)))
 			self.generateApple()
 
 		self.updateBody()

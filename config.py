@@ -52,8 +52,6 @@ initSnakeLength = 4
 gamespeed = 10
 
 
-fpsClock = pygame.time.Clock()
-
 def roundToNearestMultiple(number, multiple):
 	return number - (number%multiple)
 
@@ -84,11 +82,11 @@ def updateWindow():
 
 	pygame.display.update()
 
-def mapArrayToRainBow(arr):
+def mapArrayToRainBow(arr, length):
 	new = np.zeros((*arr.shape, 3))
 	new[:,0] = arr															# Make a new array in the RGB shape (..., 3)
 	for i in range(len(arr)):
-		new[i] = np.array(colorsys.hsv_to_rgb(new[i][0], 1, 1))*255			# Convert hue to RGB
+		new[i] = np.array(colorsys.hsv_to_rgb(new[i][0], 1-(1/length), 1-(1/length)))*255			# Convert hue to RGB
 	new = np.array(new, dtype=np.uint8)
 	return new.tolist()
 	
