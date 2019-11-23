@@ -32,7 +32,9 @@ debug = True
 
 # Print started
 if debug:
-	print("<--------------------------------------------- BEGIN --------------------------------------------->")
+	import shutil
+	columns = shutil.get_terminal_size((80, 20))[0]
+	print('<', '-'*int(0.5*columns-4.5), " BEGIN ", '-'*int(0.5*columns-4), '>', sep='')
 
 # Screen settings
 width, height = 800, 800
@@ -66,7 +68,7 @@ def unique(num_list):
 
 def updateWindow():
 	'''
-	This function checks if the player has quited the game so the pygame window exits instead of crash. Also this function updates the window and handles the resizing of the window. This function needs to be executed every game tick.
+	This function checks if the player has quited the game so the pygame window exits instead of don't respond. Also this function updates the window and handles the resizing of the window. This function needs to be executed every game tick.
 	'''
 	global width, height
 	for event in pygame.event.get():
