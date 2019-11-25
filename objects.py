@@ -102,12 +102,12 @@ class Snake:
 			self.body[i] = self.grid[y][x]
 			i+=1
 
-	def draw(self):
+	def draw(self, surface):
 		self.updateBody()
 		for i, rect in enumerate(self.body):
-			pygame.draw.rect(cfg.win, self.colors[i], rect)
+			pygame.draw.rect(surface, self.colors[i], rect)
 		if self.apple:
-			self.apple.draw()
+			self.apple.draw(surface)
 
 	def tick(self):
 		for i in range(len(self.shape)):
@@ -151,7 +151,22 @@ class Apple:
 
 		self.image = img
 
-	def draw(self):
+	def draw(self, surface):
 		img = self.image.resize((int(self.grid.boxWidth), int(self.grid.boxHeight)))
-		cfg.win.blit(cfg.PIL_to_surface(img), self.grid[self.column, self.row])
+		surface.blit(cfg.PIL_to_surface(img), self.grid[self.column, self.row])
 
+
+
+class Button(pygame.sprite.Sprite):
+	def __init__(self, rect, color=cfg.RED):
+		self.rect = pygame.Rect(rect)
+		self.color = color
+		pygame.sprite.Sprite.__init__(self)
+
+	def isHovering(self, mouseX, mouseY):
+		if self.rect.x < mouseX < self.rect.right and self.rect.y < mouseY < self.rect.bottom:
+			return True
+		return False
+	
+	def draw(self, win):
+		pygame.draw.rect(win, self.color, self.rect)

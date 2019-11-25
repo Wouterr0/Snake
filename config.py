@@ -3,9 +3,27 @@ import sys
 import colorsys
 
 
-from PIL import Image
+from PIL import Image, ImageEnhance
 import numpy as np
 import pygame
+
+# Debug mode
+debug = True
+
+# Screen settings
+width, height = 800, 800
+
+
+# Apple settings
+apple_image = Image.open("resources/apple.png")
+
+# Snake settings
+initSnakeLength = 4
+
+
+# Define gamespeed
+gamespeed = 10
+
 
 
 def surface_to_PIL(surface):
@@ -13,43 +31,21 @@ def surface_to_PIL(surface):
 	surface = Image.frombytes("RGBA", surface.get_size(), raw_str)
 	return surface
 
-
 def PIL_to_surface(surface):
 	raw_str = surface.tobytes("raw", "RGBA")
 	surface = pygame.image.fromstring(raw_str, surface.size, "RGBA")
 	return surface
 
+def changeBrightness(image, brightness):
+	return ImageEnhance.Brightness(image).enhance(brightness)
 
-
-# Initialize Pygame
-pygame.init()
-
-# Clear debug cmd prompt
-os.system("cls")
-
-# Debug mode
-debug = True
-
-# Print started
-if debug:
-	import shutil
-	columns = shutil.get_terminal_size((80, 20))[0]
-	print('<', '-'*int(0.5*columns-4.5), " BEGIN ", '-'*int(0.5*columns-4), '>', sep='')
-
-# Screen settings
-width, height = 800, 800
-win = pygame.display.set_mode((width, height), pygame.RESIZABLE)
-pygame.display.set_caption("Snake!")
-
-# Load resources
-apple_image = Image.open("resources/apple.png")
-
-
-initSnakeLength = 4
-
-
-# Define gamespeed
-gamespeed = 10
+def combineSufacesVertical(img1, img2):
+	img1 = surface_to_PIL(img1)
+	img2 = surface_to_PIL(img2)
+	dst = Image.new("RGBA", (max(img1.width, img2.width), img1.height+img2.height))
+	dst.paste(img1, ((dst.width-img1.width)//2, 0))					# (dst.width-img1.width)//2 to make sure the image is centered
+	dst.paste(img2, ((dst.width-img2.width)//2, img1.height))
+	return PIL_to_surface(dst)
 
 
 def roundToNearestMultiple(number, multiple):
@@ -64,23 +60,6 @@ def unique(num_list):
 			return False
 	return True
 
-def updateWindow():
-	'''
-	This function checks if the player has quited the game so the pygame window exits instead of don't respond. Also this function updates the window and handles the resizing of the window. This function needs to be executed every game tick.
-	'''
-	global width, height
-	for event in pygame.event.get():
-		if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-			sys.exit(0)
-		if event.type == pygame.QUIT:
-			pygame.quit()
-			sys.exit(0)
-		elif event.type == pygame.VIDEORESIZE:
-				width, height = event.size
-				if debug:
-					print('[*] resizing to', width, height)
-
-	pygame.display.update()
 
 def mapArrayToRainBow(arr, length):
 	new = np.zeros((*arr.shape, 3))
