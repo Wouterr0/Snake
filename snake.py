@@ -124,15 +124,14 @@ def pause(bg):
 	'''
 	fpsClock = pygame.time.Clock()
 	font = pygame.font.Font("FSEX300.ttf", 200)
-	pauseTextLine1 = font.render(f"Paused, click to unpause", False, DARK_BLUE)
-	pauseTextLine2 = font.render(f"Hit SPACE to return home", False, DARK_BLUE)
+	pauseTextLine1 = font.render(f"Paused, click to unpause", True, DARK_BLUE)
+	pauseTextLine2 = font.render(f"Hit SPACE to return home", True, DARK_BLUE)
 	pauseText = combineSufacesVertical(pauseTextLine1, pauseTextLine2)
 	pauseTextAspectRatio = np.divide(*pauseText.get_size()[::-1])
 
 	backgroundImage = PIL_to_surface(changeBrightness(surface_to_PIL(bg), 0.3))
 
 	hover = 0
-	hoverTime = 0
 
 	frameCount = 1
 	while True:
@@ -143,8 +142,10 @@ def pause(bg):
 
 		goldenRatio = (1 + 5 ** 0.5) / 2
 
-		h = max(50*np.sin(frameCount/10) * (1.03**(-frameCount)) + (min((width, height))/2-(1000*1/frameCount)), 0) # y = 50 * sin(x/10) * 1.03^-x + (maxWidth -(1000*1/x))
+		h = max(50*np.sin(frameCount/10) * (1.03**(-frameCount)) + (min((width, height))/2-(1000*1/(2*frameCount))), 0) # y = 50 * sin(x/10) * 1.03^-x + (maxWidth -(1000*1/x))
 		w = goldenRatio*h
+		maxHover = width/80
+		hoverSpeed = maxHover/6			# This ensures a constant magnification time of 0.1 seconds, calculated by (maxHover/hoverSpeed)/fps
 
 		
 		pauseButton = obj.Button(pygame.Rect(
@@ -154,20 +155,17 @@ def pause(bg):
 			h + 2*hover
 		))
 
-		maxHover = width/80
 		
 		if pauseButton.isHovering(*pygame.mouse.get_pos()):
 			if pygame.mouse.get_pressed()[0]:
 				return
-			hoverTime += 1
 			pauseButton.color = (110, 166, 255)
-			hover += 1
+			hover += hoverSpeed
 			hover = min(hover, maxHover)
 		else:
 			pauseButton.color = (66, 135, 245)
-			hover -= 1
+			hover -= hoverSpeed
 			hover = max(hover, 0)
-			hoverTime=0
 
 		pauseButton.draw(win)
 
