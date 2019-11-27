@@ -29,7 +29,6 @@ class Box(pygame.Rect):
 
 
 
-
 class Grid:
 	'''
 	The Grid object represents a grid full of boxes
@@ -46,7 +45,7 @@ class Grid:
 		self.columns = int(cols)
 
 		self.updateBoxes()
-		
+	
 	def __str__(self):
 	 return f"Grid(x={self.x}, y={self.y}, width={self.width}, height={self.height}, rows={self.rows}, cols={self.columns})"
 
@@ -79,24 +78,24 @@ class Grid:
 
 
 
-
 class Snake:
-	def __init__(self, shape, facing, grid: Grid, colors, score=0):
+	def __init__(self, shape, facing, grid: Grid, colors, score=0, headImage=cfg.PIL_to_surface(cfg.snakeHeadImage)):
 		self.grid = grid
 		self.shape = np.array(shape)
 		self.facing = np.array(facing)
 		self.colors = colors
 		self.score = score
 		self.apple = None
-
-		# Check if the length of shape, facing and colors are equal
-		assert len(self.shape)==len(self.facing)==len(self.colors), f"Snake has a len(self.shape)={len(self.shape)} but len(self.facing)={len(self.facing)} but len(self.colors)={len(self.colors)}"
+		self.headImage = headImage
 
 		self.updateBody()
 		self.generateApple()
 
 
 	def updateBody(self):
+		# Test if the length of shape, facing and colors are equal
+		assert len(self.shape)==len(self.facing)==len(self.colors), f"Snake has a len(self.shape)={len(self.shape)} but len(self.facing)={len(self.facing)} but len(self.colors)={len(self.colors)}"
+		
 		self.body = np.empty((len(self.shape)), dtype=Box)
 		i = 0
 		for x, y in self.shape:
@@ -106,7 +105,19 @@ class Snake:
 	def draw(self, surface):
 		self.updateBody()
 		for i, rect in enumerate(self.body):
-			pygame.draw.rect(surface, self.colors[i], rect)
+			if self.headImage and i == 0:
+				surface.blit(
+					pygame.transform.rotate(
+						pygame.transform.scale(
+							self.headImage,
+							(rect.width, rect.height)
+						),
+						np.rad2deg(np.arctan2(*self.facing[0])) # Converts cartesian directions to degrees
+					),
+					(rect.x, rect.y)
+				)
+			else:
+				pygame.draw.rect(surface, self.colors[i], rect)
 		if self.apple:
 			self.apple.draw(surface)
 
@@ -144,14 +155,13 @@ class Snake:
 
 
 
-
 class Apple:
-	def __init__(self, column, row, grid, img=cfg.apple_image):
+	def __init__(self, column, row, grid, img=cfg.appleImage):
 		self.column = column
 		self.row = row
 		self.grid = grid
-
 		self.image = img
+
 
 	def draw(self, surface):
 		img = self.image.resize((int(self.grid.boxWidth), int(self.grid.boxHeight)))
@@ -164,6 +174,7 @@ class Button(pygame.sprite.Sprite):
 		self.rect = pygame.Rect(rect)
 		self.color = color
 		pygame.sprite.Sprite.__init__(self)
+
 
 	def isHovering(self, mouseX, mouseY):
 		if self.rect.x < mouseX < self.rect.right and self.rect.y < mouseY < self.rect.bottom:

@@ -181,7 +181,7 @@ def pause(bg):
 		pauseTextHeight = int((w*0.9 + hover)*pauseTextAspectRatio)		# Scale the font but remain the correct aspect ratio
 
 		win.blit(						# Print the pauseText to the screen
-			pygame.transform.scale(		# Scaling the surface that contains the font to the correct size
+			pygame.transform.smoothscale(		# Scaling the surface that contains the font to the correct size
 				pauseText,
 				(pauseTextWidth, pauseTextHeight)
 			),

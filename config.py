@@ -17,10 +17,11 @@ width, height = 800, 800
 gameFont = "FSEX300.ttf"
 
 # Apple settings
-apple_image = Image.open("resources/apple.png")
+appleImage = Image.open("assets/apple.png")
 
 # Snake settings
 initSnakeLength = 4
+snakeHeadImage = Image.open("assets/snakeHead.png")
 
 
 # Define gamespeed
