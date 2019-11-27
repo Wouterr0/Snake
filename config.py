@@ -13,6 +13,8 @@ debug = True
 # Screen settings
 width, height = 800, 800
 
+# Game Font
+gameFont = "FSEX300.ttf"
 
 # Apple settings
 apple_image = Image.open("resources/apple.png")

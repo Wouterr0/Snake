@@ -111,6 +111,11 @@ def mainGame(difficulty):
 		grid.draw(win)
 		snake.draw(win)
 
+		# Display the score
+		scoreFont = pygame.font.Font(gameFont, min((width, height))//10)
+		scoreText = scoreFont.render(str(snake.score), True, WHITE)
+		win.blit(scoreText, ((width - scoreText.get_width())/2, 0))
+		
 		width, height = updateWindow()
 
 
@@ -123,7 +128,9 @@ def pause(bg):
 	but it's never smaler than 0.
 	'''
 	fpsClock = pygame.time.Clock()
-	font = pygame.font.Font("FSEX300.ttf", 200)
+	font = pygame.font.Font(gameFont, 200)
+
+	# Rendering it firs so I can scale the surface instead of the font beacause then it would be really not smooth
 	pauseTextLine1 = font.render(f"Paused, click to unpause", True, DARK_BLUE)
 	pauseTextLine2 = font.render(f"Hit SPACE to return home", True, DARK_BLUE)
 	pauseText = combineSufacesVertical(pauseTextLine1, pauseTextLine2)
