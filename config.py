@@ -1,32 +1,12 @@
 import os
 import sys
 import colorsys
+import random
 
 
 from PIL import Image, ImageEnhance
 import numpy as np
 import pygame
-
-# Debug mode
-debug = True
-
-# Screen settings
-width, height = 800, 800
-
-# Game Font
-gameFont = "FSEX300.ttf"
-
-# Apple settings
-appleImage = Image.open("assets/apple.png")
-
-# Snake settings
-initSnakeLength = 4
-snakeHeadImage = Image.open("assets/snakeHead.png")
-
-
-# Define gamespeed
-gamespeed = 10
-
 
 
 def surface_to_PIL(surface):
@@ -72,6 +52,32 @@ def mapArrayToRainBow(arr, length):
 	new = np.array(new, dtype=np.uint8)
 	return new.tolist()
 	
+
+# Debug mode
+debug = True
+
+# Screen settings
+width, height = 800, 800
+
+# Game Font
+gameFont = "FSEX300.ttf"
+
+# Grid settings
+gridColor = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+gridBorderColor = (np.array(gridColor)*0.7).tolist()
+
+# Apple settings
+appleImage = Image.open("assets/apple.png")
+
+# Snake settings
+initSnakeLength = 4
+snakeHeadImage = Image.open("assets/snakeHead.png")
+
+
+# Define gamespeed
+gamespeed = 10
+
+
 
 # Define common colors
 WHITE = (255, 255, 255)

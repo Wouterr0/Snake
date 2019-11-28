@@ -56,7 +56,7 @@ def updateWindow():
 def mainGame(difficulty):
 	# Grid
 	global width, height
-	grid = obj.Grid(0, 0, 0, 0, 21, 21)
+	grid = obj.Grid(0, 0, 0, 0, 21, 21, color=gridColor, boxBorderColor=gridBorderColor)
 	grid.width, grid.height = min((width, height))*0.8, min((width, height))*0.8
 	grid.x, grid.y = width/2-grid.width/2, height/2-grid.height/2
 	grid.updateBoxes()
@@ -143,8 +143,6 @@ def pause(bg):
 	frameCount = 1
 	while True:
 		fpsClock.tick(60)	# Ensures that the game will not play higher than 60 fps
-		# win.fill(BLACK)		# TODO: Instead of filling, blit a darker version of the mainGame
-
 		win.blit(pygame.transform.scale(backgroundImage, (width, height)), (0, 0))
 
 		goldenRatio = (1 + 5 ** 0.5) / 2
@@ -152,7 +150,7 @@ def pause(bg):
 		h = max(50*np.sin(frameCount/10) * (1.03**(-frameCount)) + (min((width, height))/2-(1000*1/(2*frameCount))), 0) # y = 50 * sin(x/10) * 1.03^-x + (maxWidth -(1000*1/x))
 		w = goldenRatio*h
 		maxHover = width/80
-		hoverSpeed = maxHover/6			# This ensures a constant magnification time of 0.1 seconds, calculated by (maxHover/hoverSpeed)/fps
+		hoverSpeed = maxHover/3	# This ensures a constant magnification time of 0.05 seconds, calculated by (maxHover/hoverSpeed)/fps
 
 		
 		pauseButton = obj.Button(pygame.Rect(

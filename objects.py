@@ -9,11 +9,10 @@ import config as cfg
 class Box(pygame.Rect):
 	'''
 	The Box object represents on box on a grid
-
 	'''
-	def __init__(self, x, y, w, h, lineWidth, color=cfg.GREEN):
+	def __init__(self, x, y, w, h, lineWidth, color=cfg.GREEN, borderColor=cfg.DARK_GREEN):
 		self.color = color
-		self.edgeColor = cfg.DARK_GREEN
+		self.borderColor = borderColor
 		
 		self.x = int(x)
 		self.y = int(y)
@@ -25,16 +24,15 @@ class Box(pygame.Rect):
 	
 	def draw(self, surface: pygame.Surface):
 		pygame.draw.rect(surface, self.color, self)							# Draw box
-		pygame.draw.rect(surface, self.edgeColor, self, self.lineWidth)		# Draw border
+		pygame.draw.rect(surface, self.borderColor, self, self.lineWidth)		# Draw border
 
 
 
 class Grid:
 	'''
 	The Grid object represents a grid full of boxes
-
 	'''
-	def __init__(self, x, y, w, h, rows, cols):
+	def __init__(self, x, y, w, h, rows, cols, color=None, boxBorderColor=None):
 		self.x = x
 		self.y = y
 
@@ -43,6 +41,9 @@ class Grid:
 
 		self.rows = int(rows)
 		self.columns = int(cols)
+
+		self.color = color
+		self.boxBorderColor = boxBorderColor
 
 		self.updateBoxes()
 	
@@ -63,8 +64,18 @@ class Grid:
 
 		for row in range(self.rows):
 			for column in range(self.columns):
-				self.boxes[row, column] = Box(self.x+self.boxWidth*column, self.y+self.boxHeight*row, self.boxWidth, self.boxHeight, self.width//150+1)
-
+				if self.color and self.boxBorderColor:
+					self.boxes[row, column] = Box(
+						self.x+self.boxWidth*column,	# x-coordinate
+						self.y+self.boxHeight*row,		# y-coordinate
+						self.boxWidth,
+						self.boxHeight,
+						self.width//200,				# lineWidth
+						color=self.color,
+						borderColor=self.boxBorderColor
+					)
+				else:
+					self.boxes[row, column] = Box(self.x+self.boxWidth*column, self.y+self.boxHeight*row, self.boxWidth, self.boxHeight, self.width//200)
 
 	def draw(self, surface: pygame.Surface):
 		'''
