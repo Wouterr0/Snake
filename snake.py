@@ -47,13 +47,32 @@ def updateWindow():
 			if debug:
 				print("[*] resizing to", width, height)
 
-	pygame.display.update()
+	pygame.display.flip()
 	return width, height
 
 
+def deathScreen(score):
+	pass
 
 
-def mainGame(difficulty):
+def home():
+	while True:
+		im = repeatTileImage(
+			startBgImage.resize(
+				np.multiply(
+					startBgImage.size, 2
+				).astype(int)
+			),
+			(width, height)
+		)
+		win.blit(pygame.transform.scale2x(PIL_to_surface(im)), (0, 0))
+		if pygame.mouse.get_pressed()[0]:
+			return -1
+		
+		updateWindow()
+
+
+def snake(difficulty):
 	# Grid
 	global width, height
 	grid = obj.Grid(0, 0, 0, 0, 21, 21, color=gridColor, boxBorderColor=gridBorderColor)
@@ -81,20 +100,20 @@ def mainGame(difficulty):
 		if newTimePast != timePast:		# New game tick
 			print("[*] tick", round(timePast, 5))
 			snake.facing[0] = newFacing
-			if snake.tick():			# Returns if snake has died in that gametick
+			if snake.tick():			# Checks if snake has died in that gametick
 				return					# If so return TODO: Make it return the score
 			timePast = newTimePast
 		
 
 		keys = pygame.key.get_pressed()
 
-		if keys[pygame.K_w] or keys[pygame.K_UP] and snake.facing[0].tolist() != [0, 1]:
+		if (keys[pygame.K_w] or keys[pygame.K_UP]) and snake.facing[0].tolist() != [0, 1]:
 			newFacing = [0, -1]
-		if keys[pygame.K_a] or keys[pygame.K_LEFT] and snake.facing[0].tolist() != [1, 0]:
+		if (keys[pygame.K_a] or keys[pygame.K_LEFT]) and snake.facing[0].tolist() != [1, 0]:
 			newFacing = [-1, 0]
-		if keys[pygame.K_s] or keys[pygame.K_DOWN] and snake.facing[0].tolist() != [0, -1]:
+		if (keys[pygame.K_s] or keys[pygame.K_DOWN]) and snake.facing[0].tolist() != [0, -1]:
 			newFacing = [0, 1]
-		if keys[pygame.K_d] or keys[pygame.K_RIGHT] and snake.facing[0].tolist() != [-1, 0]:
+		if (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and snake.facing[0].tolist() != [-1, 0]:
 			newFacing = [1, 0]
 		if keys[pygame.K_p]:
 			pause(pygame.display.get_surface())
@@ -131,7 +150,7 @@ def pause(bg):
 	font = pygame.font.Font(gameFont, 200)
 
 	# Rendering it firs so I can scale the surface instead of the font beacause then it would be really not smooth
-	pauseTextLine1 = font.render(f"Paused, click to unpause", True, DARK_BLUE)
+	pauseTextLine1 = font.render(f"Paused, click to continue", True, DARK_BLUE)
 	pauseTextLine2 = font.render(f"Hit SPACE to return home", True, DARK_BLUE)
 	pauseText = combineSufacesVertical(pauseTextLine1, pauseTextLine2)
 	pauseTextAspectRatio = np.divide(*pauseText.get_size()[::-1])
@@ -192,4 +211,5 @@ def pause(bg):
 		frameCount+=1
 		updateWindow()
 
-mainGame(-1)
+while True:
+	deathScreen(snake(home()))

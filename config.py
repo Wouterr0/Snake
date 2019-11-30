@@ -1,8 +1,6 @@
 import os
 import sys
 import colorsys
-import random
-
 
 from PIL import Image, ImageEnhance
 import numpy as np
@@ -29,6 +27,13 @@ def combineSufacesVertical(img1, img2):
 	dst.paste(img1, ((dst.width-img1.width)//2, 0))					# (dst.width-img1.width)//2 to make sure the image is centered
 	dst.paste(img2, ((dst.width-img2.width)//2, img1.height))
 	return PIL_to_surface(dst)
+
+def repeatTileImage(img, size):
+	result = Image.new(img.mode, size)
+	for i in range(0, size[0], img.width):
+		for j in range(0, size[1], img.height):
+			result.paste(img, (i, j))
+	return result
 
 
 def roundToNearestMultiple(number, multiple):
@@ -62,8 +67,11 @@ width, height = 800, 800
 # Game Font
 gameFont = "FSEX300.ttf"
 
+# Start settings
+startBgImage = Image.open("assets/brick.png")
+
 # Grid settings
-gridColor = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+gridColor = (np.random.randint(0, 256), np.random.randint(0, 256), np.random.randint(0, 256))
 gridBorderColor = (np.array(gridColor)*0.7).tolist()
 
 # Apple settings
