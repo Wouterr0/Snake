@@ -21,10 +21,10 @@ class Box(pygame.Rect):
 
 		self.lineWidth = int(lineWidth)
 		super().__init__(self.x, self.y, self.width, self.height)
-	
+
 	def draw(self, surface: pygame.Surface):
 		pygame.draw.rect(surface, self.color, self)							# Draw box
-		pygame.draw.rect(surface, self.borderColor, self, self.lineWidth)		# Draw border
+		pygame.draw.rect(surface, self.borderColor, self, self.lineWidth)	# Draw border
 
 
 
@@ -70,7 +70,7 @@ class Grid:
 						self.y+self.boxHeight*row,		# y-coordinate
 						self.boxWidth,
 						self.boxHeight,
-						self.width//200,				# lineWidth
+						self.width//300,				# lineWidth
 						color=self.color,
 						borderColor=self.boxBorderColor
 					)
@@ -101,7 +101,6 @@ class Snake:
 
 		self.updateBody()
 		self.generateApple()
-
 
 	def updateBody(self):
 		# Test if the length of shape, facing and colors are equal
@@ -153,15 +152,13 @@ class Snake:
 		mask[self.shape.T[1], self.shape.T[0]] = True
 		possibleSpawnLocations = possibleSpawnLocations[~mask]
 		self.apple = Apple(*random.choice(possibleSpawnLocations), self.grid)
-	
-	
+
 	def grow(self, newColors, amount=1):
 		print(f"[*] growing by {amount}")
 		for _ in range(amount):
 			self.shape = np.vstack((self.shape, np.add(np.multiply(self.facing[-1], -1), self.shape[-1])))
 			self.facing = np.vstack((self.facing, self.facing[-1]))
 			self.colors = newColors
-
 		self.updateBody()
 
 
@@ -173,7 +170,6 @@ class Apple:
 		self.grid = grid
 		self.image = img
 
-
 	def draw(self, surface):
 		img = self.image.resize((int(self.grid.boxWidth), int(self.grid.boxHeight)))
 		surface.blit(cfg.PIL_to_surface(img), self.grid[self.column, self.row])
@@ -181,16 +177,19 @@ class Apple:
 
 
 class Button(pygame.sprite.Sprite):
-	def __init__(self, rect, color=cfg.RED):
+	def __init__(self, rect, img=None, color=cfg.RED):
 		self.rect = pygame.Rect(rect)
 		self.color = color
+		self.image = img
 		pygame.sprite.Sprite.__init__(self)
 
-
-	def isHovering(self, mouseX, mouseY):
+	def hover(self, point):
+		mouseX, mouseY = point
 		if self.rect.x < mouseX < self.rect.right and self.rect.y < mouseY < self.rect.bottom:
 			return True
 		return False
-	
+
 	def draw(self, win):
 		pygame.draw.rect(win, self.color, self.rect)
+		if self.image:
+			win.blit(self.image, np.array(self.rect.center) - np.array(self.image.get_size())/2)

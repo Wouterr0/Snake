@@ -56,43 +56,35 @@ def mapArrayToRainBow(arr, length):
 		new[i] = np.array(colorsys.hsv_to_rgb(new[i][0], 1-(1/length), 1-(1/length)))*255			# Convert hue to RGB
 	new = np.array(new, dtype=np.uint8)
 	return new.tolist()
-	
 
-# Debug mode
+
+# -- Run configurations --
 debug = True
+width, height = 800, 800 # Initial window dimensions
 
-# Screen settings
-width, height = 800, 800
 
-# Game Font
+# -- User Interface configurations --
 gameFont = "FSEX300.ttf"
-
-# Start settings
 startBgImage = Image.open("assets/brick.png")
 
-# Grid settings
-gridColor = (np.random.randint(0, 256), np.random.randint(0, 256), np.random.randint(0, 256))
-gridBorderColor = (np.array(gridColor)*0.7).tolist()
 
-# Apple settings
+# -- Gameplay configurations --
+gamespeed = 10
+
 appleImage = Image.open("assets/apple.png")
 
-# Snake settings
 initSnakeLength = 4
 snakeHeadImage = Image.open("assets/snakeHead.png")
 
 
-# Define gamespeed
-gamespeed = 10
 
-
-
-# Define common colors
+# Color configurations
 WHITE = (255, 255, 255)
 GREY = (127, 127, 127)
 BLACK = (0, 0, 0)
 FUCHSIA = (255, 0, 255)
 RED = (255, 0, 0)
+BROWN = (150, 75, 0)
 ORANGE = (255, 127, 0)
 JELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
@@ -105,3 +97,7 @@ DARK_BLUE = (0, 0, 127)
 LIGHT_RED = (255, 127, 127)
 LIGHT_GREEN = (127, 255, 127)
 LIGHT_BLUE = (127, 127, 255)
+
+
+# Constants
+GOLDENRATIO = (1 + 5 ** 0.5) / 2

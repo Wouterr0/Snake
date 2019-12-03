@@ -56,25 +56,54 @@ def deathScreen(score):
 
 
 def home():
+	playText = pygame.font.Font(gameFont, 200).render("PLAY", True, WHITE)
+
 	while True:
-		im = repeatTileImage(
+		background = repeatTileImage(
 			startBgImage.resize(
-				np.multiply(
-					startBgImage.size, 2
-				).astype(int)
+				(np.array(startBgImage.size) * 2).astype(int)
 			),
 			(width, height)
 		)
-		win.blit(pygame.transform.scale2x(PIL_to_surface(im)), (0, 0))
-		if pygame.mouse.get_pressed()[0]:
-			return -1
+
+		# Draw background
+		win.blit(pygame.transform.scale2x(PIL_to_surface(background)), (0, 0))
+
+		# Update and draw playButton and playText
+		_width, _height = min((width, height))/2*GOLDENRATIO, min((width, height))/2
 		
+		playTextWidth = int(_width*0.9)
+		playTextHeight = int(_height*0.9)
+
+		playButton = obj.Button(
+			pygame.Rect(
+				(width-_width)/2,
+				(height-_height)/2,
+				_width,
+				_height
+			),
+			pygame.transform.smoothscale(playText, (playTextWidth, playTextHeight))
+		)
+
+		if playButton.hover(pygame.mouse.get_pos()):
+			playButton.color = (145, 34, 0)
+			if pygame.mouse.get_pressed()[0]:
+				return -1
+		else:
+			playButton.color = (123, 17, 19)
+		playButton.draw(win)
+
+
+
 		updateWindow()
 
 
 def snake(difficulty):
 	# Grid
 	global width, height
+	gridColor = (np.random.randint(0, 256), np.random.randint(0, 256), np.random.randint(0, 256))
+	gridBorderColor = (np.array(gridColor)*0.7).tolist()
+	
 	grid = obj.Grid(0, 0, 0, 0, 21, 21, color=gridColor, boxBorderColor=gridBorderColor)
 	grid.width, grid.height = min((width, height))*0.8, min((width, height))*0.8
 	grid.x, grid.y = width/2-grid.width/2, height/2-grid.height/2
@@ -164,23 +193,26 @@ def pause(bg):
 		fpsClock.tick(60)	# Ensures that the game will not play higher than 60 fps
 		win.blit(pygame.transform.scale(backgroundImage, (width, height)), (0, 0))
 
-		goldenRatio = (1 + 5 ** 0.5) / 2
-
 		h = max(50*np.sin(frameCount/10) * (1.03**(-frameCount)) + (min((width, height))/2-(1000*1/(2*frameCount))), 0) # y = 50 * sin(x/10) * 1.03^-x + (maxWidth -(1000*1/x))
-		w = goldenRatio*h
+		w = GOLDENRATIO*h
 		maxHover = width/80
 		hoverSpeed = maxHover/3	# This ensures a constant magnification time of 0.05 seconds, calculated by (maxHover/hoverSpeed)/fps
 
-		
-		pauseButton = obj.Button(pygame.Rect(
-			width/2 - w/2 - hover*goldenRatio,		# Make sure the button is centered
-			height/2-h/2 - hover,
-			w + 2*hover*goldenRatio,
-			h + 2*hover
-		))
+		pauseTextWidth = int(w*0.9 + hover)								# Scle the width to 90% of the pauseButton
+		pauseTextHeight = int((w*0.9 + hover)*pauseTextAspectRatio)		# Scale the font but remain the correct aspect ratio
+
+		pauseButton = obj.Button(
+			pygame.Rect(
+				width/2 - w/2 - hover*GOLDENRATIO,		# Make sure the button is centered
+				height/2-h/2 - hover,
+				w + 2*hover*GOLDENRATIO,
+				h + 2*hover
+			),
+			pygame.transform.smoothscale(pauseText, (pauseTextWidth, pauseTextHeight))
+		)
 
 		
-		if pauseButton.isHovering(*pygame.mouse.get_pos()):
+		if pauseButton.hover(pygame.mouse.get_pos()):
 			if pygame.mouse.get_pressed()[0]:
 				return
 			pauseButton.color = (110, 166, 255)
@@ -192,21 +224,6 @@ def pause(bg):
 			hover = max(hover, 0)
 
 		pauseButton.draw(win)
-
-
-		pauseTextWidth = int(w*0.9 + hover)								# Scle the width to 90% of the pauseButton
-		pauseTextHeight = int((w*0.9 + hover)*pauseTextAspectRatio)		# Scale the font but remain the correct aspect ratio
-
-		win.blit(						# Print the pauseText to the screen
-			pygame.transform.smoothscale(		# Scaling the surface that contains the font to the correct size
-				pauseText,
-				(pauseTextWidth, pauseTextHeight)
-			),
-			(
-				(width-pauseTextWidth)/2,
-				(height-pauseTextHeight)/2
-			)
-		)
 
 		frameCount+=1
 		updateWindow()
