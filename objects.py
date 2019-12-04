@@ -108,8 +108,8 @@ class Snake:
 		
 		self.body = np.empty((len(self.shape)), dtype=Box)
 		i = 0
-		for x, y in self.shape:
-			self.body[i] = self.grid[y][x]
+		for column, row in self.shape:
+			self.body[i] = self.grid[row,column]
 			i+=1
 
 	def draw(self, surface):

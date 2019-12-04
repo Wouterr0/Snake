@@ -138,7 +138,11 @@ def snake(difficulty):
 	gridColor = (np.random.randint(0, 256), np.random.randint(0, 256), np.random.randint(0, 256))
 	gridBorderColor = (np.array(gridColor)*0.7).tolist()
 	
-	grid = obj.Grid(0, 0, 0, 0, 10, 21, color=gridColor, boxBorderColor=gridBorderColor)
+	gridSize = -2*difficulty+27 # Calculate grid size with the formula: gridSize = -2 * difficulty + 27
+	print("gridSize =", gridSize)
+	print(difficulty)
+
+	grid = obj.Grid(0, 0, 0, 0, gridSize, gridSize, color=gridColor, boxBorderColor=gridBorderColor)
 	grid.width, grid.height = min((width, height))*0.8, min((width, height))*0.8
 	grid.x, grid.y = width/2-grid.width/2, height/2-grid.height/2
 	grid.updateBoxes()
