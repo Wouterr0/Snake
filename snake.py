@@ -3,6 +3,7 @@ import time
 
 import numpy as np
 import pygame
+import pygame_gui
 
 from config import *
 import objects as obj
@@ -25,6 +26,7 @@ if debug:
 print(width, height)
 
 win = pygame.display.set_mode((width, height), pygame.RESIZABLE)
+manager = pygame_gui.UIManager((800, 800))
 pygame.display.set_caption("Snake!")
 
 
@@ -36,6 +38,8 @@ def updateWindow():
 	needs to be executed every game tick.
 	'''
 	global width, height
+	global manager
+
 	for event in pygame.event.get():
 		if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
 			sys.exit(0)
@@ -46,6 +50,8 @@ def updateWindow():
 			width, height = event.size
 			if debug:
 				print("[*] resizing to", width, height)
+		
+		manager.process_events(event)
 
 	pygame.display.flip()
 	return width, height
@@ -58,7 +64,23 @@ def deathScreen(score):
 def home():
 	playText = pygame.font.Font(gameFont, 200).render("PLAY", True, WHITE)
 
+	slider = pygame_gui.elements.ui_horizontal_slider.UIHorizontalSlider(
+		pygame.Rect(
+			(width-(width/2*GOLDENRATIO))/2,
+			0,
+			width/2*GOLDENRATIO,
+			height/20
+		),
+		0,			# default
+		(0, 10),	# range
+		manager
+	)
+	
+	fpsClock = pygame.time.Clock()
+	
 	while True:
+		fpsClock.tick(maxFPS)	# Ensures that the game will not play higher than maxFPS fps
+
 		background = repeatTileImage(
 			startBgImage.resize(
 				(np.array(startBgImage.size) * 2).astype(int)
@@ -69,7 +91,11 @@ def home():
 		# Draw background
 		win.blit(pygame.transform.scale2x(PIL_to_surface(background)), (0, 0))
 
-		# Update and draw playButton and playText
+		# Update and draw playButton with playText and difficultyText on it
+		difficulty = int(round(slider.get_current_value()))
+		difficultyText = pygame.font.Font(gameFont, 200).render("level " + str(difficulty) + ('' if difficulty==10 else ' '), True, WHITE)
+		fullPlayText = combineSufacesVertical(playText, difficultyText)
+		
 		_width, _height = min((width, height))/2*GOLDENRATIO, min((width, height))/2
 		
 		playTextWidth = int(_width*0.9)
@@ -82,18 +108,26 @@ def home():
 				_width,
 				_height
 			),
-			pygame.transform.smoothscale(playText, (playTextWidth, playTextHeight))
+			pygame.transform.smoothscale(fullPlayText, (playTextWidth, playTextHeight)) # Resize playText to fit nice in the startButton
 		)
+
+		# Update pygame_gui
+		slider.update(1/maxFPS)
+		manager.update(1/maxFPS)
+
+
 
 		if playButton.hover(pygame.mouse.get_pos()):
 			playButton.color = (145, 34, 0)
 			if pygame.mouse.get_pressed()[0]:
-				return -1
+				slider.kill()
+				return difficulty
 		else:
 			playButton.color = (123, 17, 19)
+
+		# Draw stuff
 		playButton.draw(win)
-
-
+		manager.draw_ui(win)
 
 		updateWindow()
 
@@ -190,7 +224,7 @@ def pause(bg):
 
 	frameCount = 1
 	while True:
-		fpsClock.tick(60)	# Ensures that the game will not play higher than 60 fps
+		fpsClock.tick(maxFPS)	# Ensures that the game will not play higher than maxFPS fps
 		win.blit(pygame.transform.scale(backgroundImage, (width, height)), (0, 0))
 
 		h = max(50*np.sin(frameCount/10) * (1.03**(-frameCount)) + (min((width, height))/2-(1000*1/(2*frameCount))), 0) # y = 50 * sin(x/10) * 1.03^-x + (maxWidth -(1000*1/x))

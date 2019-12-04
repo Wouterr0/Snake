@@ -70,6 +70,7 @@ startBgImage = Image.open("assets/brick.png")
 
 # -- Gameplay configurations --
 gamespeed = 10
+maxFPS = 60
 
 appleImage = Image.open("assets/apple.png")
 
