@@ -71,8 +71,8 @@ def home():
 			width/2*GOLDENRATIO,
 			height/20
 		),
-		0,			# default
-		(0, 10),	# range
+		1,			# default
+		(1, 10),	# range
 		manager
 	)
 	
@@ -138,20 +138,20 @@ def snake(difficulty):
 	gridColor = (np.random.randint(0, 256), np.random.randint(0, 256), np.random.randint(0, 256))
 	gridBorderColor = (np.array(gridColor)*0.7).tolist()
 	
-	grid = obj.Grid(0, 0, 0, 0, 21, 21, color=gridColor, boxBorderColor=gridBorderColor)
+	grid = obj.Grid(0, 0, 0, 0, 10, 21, color=gridColor, boxBorderColor=gridBorderColor)
 	grid.width, grid.height = min((width, height))*0.8, min((width, height))*0.8
 	grid.x, grid.y = width/2-grid.width/2, height/2-grid.height/2
 	grid.updateBoxes()
 
 	# Snake
 	snake = obj.Snake(
-		[(initSnakeLength-i+1, grid.rows//2) for i in range(initSnakeLength)],				#((4, grid.rows//2), (3, grid.rows//2), (2, grid.rows//2), (1, grid.rows//2)),
+		[(initSnakeLength-i+1, grid.rows//2) for i in range(initSnakeLength)],
 		(np.tile((1, 0), (initSnakeLength, 1))),
 		grid,
 		mapArrayToRainBow(np.linspace(0, 1, initSnakeLength), initSnakeLength)
 	)
 
-	newFacing = snake.facing[0]
+	newFacing = snake.facing[0] # newFacing is the current firs facing and is updated to snake.facing[0] every gametick
 
 
 	start = time.time()
@@ -199,6 +199,7 @@ def snake(difficulty):
 		win.blit(scoreText, ((width - scoreText.get_width())/2, 0))
 		
 		width, height = updateWindow()
+
 
 
 def pause(bg):

@@ -117,12 +117,12 @@ class Snake:
 		for i, rect in enumerate(self.body):
 			if self.headImage and i == 0:
 				surface.blit(
-					pygame.transform.rotate(
-						pygame.transform.scale(
+					pygame.transform.scale(
+						pygame.transform.rotate(
 							self.headImage,
-							(rect.width, rect.height)
+							np.rad2deg(np.arctan2(*self.facing[0])) # Converts cartesian directions to degrees
 						),
-						np.rad2deg(np.arctan2(*self.facing[0])) # Converts cartesian directions to degrees
+						(rect.width, rect.height)
 					),
 					(rect.x, rect.y)
 				)
@@ -136,10 +136,10 @@ class Snake:
 			self.shape[i] = np.add(self.shape[i], self.facing[i])
 		self.facing[1:] = self.facing[:-1]
 
-		if any(pos[0] < 0 or pos[0] >= self.grid.rows or pos[1] < 0 or pos[1] >= self.grid.columns for pos in self.shape) or not cfg.unique(self.shape.tolist()):
+		if any(pos[0] < 0 or pos[0] >= self.grid.columns or pos[1] < 0 or pos[1] >= self.grid.rows for pos in self.shape) or not cfg.unique(self.shape.tolist()):
 			return 1
 
-		if self.grid.boxes[self.shape[0][1], self.shape[0][0]] == self.grid.boxes[self.apple.column, self.apple.row]:
+		if self.grid.boxes[self.shape[0][1], self.shape[0][0]] == self.grid.boxes[self.apple.row, self.apple.column]:
 			self.score += 1
 			self.grow(cfg.mapArrayToRainBow(np.linspace(0, 1, len(self.colors)+1), len(self.shape)))
 			self.generateApple()
@@ -147,11 +147,12 @@ class Snake:
 		self.updateBody()
 
 	def generateApple(self, amount=1):
-		possibleSpawnLocations = np.dstack(np.mgrid[0:self.grid.columns, 0:self.grid.rows])
-		mask = np.zeros((self.grid.rows, self.grid.columns), dtype=bool)
-		mask[self.shape.T[1], self.shape.T[0]] = True
-		possibleSpawnLocations = possibleSpawnLocations[~mask]
-		self.apple = Apple(*random.choice(possibleSpawnLocations), self.grid)
+		while True:
+			generatedPosition = np.random.randint(0, self.grid.columns), np.random.randint(0, self.grid.rows)
+			if generatedPosition in self.shape: # Python equivalent of a do while loop
+				continue
+			break
+		self.apple = Apple(*generatedPosition, self.grid)
 
 	def grow(self, newColors, amount=1):
 		print(f"[*] growing by {amount}")
@@ -172,7 +173,7 @@ class Apple:
 
 	def draw(self, surface):
 		img = self.image.resize((int(self.grid.boxWidth), int(self.grid.boxHeight)))
-		surface.blit(cfg.PIL_to_surface(img), self.grid[self.column, self.row])
+		surface.blit(cfg.PIL_to_surface(img), self.grid[self.row, self.column])
 
 
 

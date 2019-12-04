@@ -2,4 +2,4 @@ TODO
  - Difficulty slider
  - Save highscore to disk
  - Berry easteregg
- - 
+ - Deathscreen
