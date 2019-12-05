@@ -90,7 +90,7 @@ class Grid:
 
 
 class Snake:
-	def __init__(self, shape, facing, grid: Grid, colors, score=0, headImage=cfg.PIL_to_surface(cfg.snakeHeadImage)):
+	def __init__(self, shape, facing, grid: Grid, colors, headImage, appleImage, pickupSound, score=0):
 		self.grid = grid
 		self.shape = np.array(shape)
 		self.facing = np.array(facing)
@@ -98,6 +98,8 @@ class Snake:
 		self.score = score
 		self.apple = None
 		self.headImage = headImage
+		self.appleImage = appleImage
+		self.pickupSound = pickupSound
 
 		self.updateBody()
 		self.generateApple()
@@ -140,6 +142,7 @@ class Snake:
 			return 1
 
 		if self.grid.boxes[self.shape[0][1], self.shape[0][0]] == self.grid.boxes[self.apple.row, self.apple.column]:
+			pygame.mixer.Sound.play(self.pickupSound)
 			self.score += 1
 			self.grow(cfg.mapArrayToRainBow(np.linspace(0, 1, len(self.colors)+1), len(self.shape)))
 			self.generateApple()
@@ -152,7 +155,7 @@ class Snake:
 			if generatedPosition in self.shape: # Python equivalent of a do while loop
 				continue
 			break
-		self.apple = Apple(*generatedPosition, self.grid)
+		self.apple = Apple(*generatedPosition, self.grid, self.appleImage)
 
 	def grow(self, newColors, amount=1):
 		print(f"[*] growing by {amount}")
@@ -165,7 +168,7 @@ class Snake:
 
 
 class Apple:
-	def __init__(self, column, row, grid, img=cfg.appleImage):
+	def __init__(self, column, row, grid, img):
 		self.column = column
 		self.row = row
 		self.grid = grid

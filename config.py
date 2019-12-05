@@ -6,6 +6,8 @@ from PIL import Image, ImageEnhance
 import numpy as np
 import pygame
 
+pygame.mixer.init()
+
 
 def surface_to_PIL(surface):
 	raw_str = pygame.image.tostring(surface, "RGBA", False)
@@ -72,10 +74,17 @@ startBgImage = Image.open("assets/brick.png")
 gamespeed = 10
 maxFPS = 60
 
+berryMode = True
+
 appleImage = Image.open("assets/apple.png")
+berryFruitImage = Image.open("assets/berryFruit.png")
+
+applePickupSound = pygame.mixer.Sound("assets/applePickup.wav")
+berryPickupSound = pygame.mixer.Sound("assets/berryPickup.wav")
 
 initSnakeLength = 4
-snakeHeadImage = Image.open("assets/snakeHead.png")
+snakeHeadImage = pygame.image.load("assets/snakeHead.png")
+berryHeadImage = pygame.image.load("assets/berryHead.png")
 
 
 

@@ -12,6 +12,7 @@ import objects as obj
 # Initialize Pygame
 pygame.init()
 pygame.font.init()
+pygame.mixer.init()
 
 # Clear debug cmd prompt
 os.system("cls")
@@ -138,11 +139,11 @@ def snake(difficulty):
 	gridColor = (np.random.randint(0, 256), np.random.randint(0, 256), np.random.randint(0, 256))
 	gridBorderColor = (np.array(gridColor)*0.7).tolist()
 	
-	gridSize = -2*difficulty+27 # Calculate grid size with the formula: gridSize = -2 * difficulty + 27
+	gridSize = -2*difficulty+29 # Calculate grid size with the formula: gridSize = -2 * difficulty + 27
 	print("gridSize =", gridSize)
 	print(difficulty)
 
-	grid = obj.Grid(0, 0, 0, 0, gridSize, gridSize, color=gridColor, boxBorderColor=gridBorderColor)
+	grid = obj.Grid(0, 0, 0, 0, gridSize, gridSize, color=gridColor, boxBorderColor=gridColor if berryMode else gridBorderColor)
 	grid.width, grid.height = min((width, height))*0.8, min((width, height))*0.8
 	grid.x, grid.y = width/2-grid.width/2, height/2-grid.height/2
 	grid.updateBoxes()
@@ -152,7 +153,10 @@ def snake(difficulty):
 		[(initSnakeLength-i+1, grid.rows//2) for i in range(initSnakeLength)],
 		(np.tile((1, 0), (initSnakeLength, 1))),
 		grid,
-		mapArrayToRainBow(np.linspace(0, 1, initSnakeLength), initSnakeLength)
+		mapArrayToRainBow(np.linspace(0, 1, initSnakeLength), initSnakeLength),
+		berryHeadImage if berryMode else snakeHeadImage,	# Snake head image
+		berryFruitImage if berryMode else appleImage,		# Apple image
+		berryPickupSound if berryMode else applePickupSound # pickup sound
 	)
 
 	newFacing = snake.facing[0] # newFacing is the current firs facing and is updated to snake.facing[0] every gametick
@@ -168,7 +172,7 @@ def snake(difficulty):
 			print("[*] tick", round(timePast, 5))
 			snake.facing[0] = newFacing
 			if snake.tick():			# Checks if snake has died in that gametick
-				return					# If so return TODO: Make it return the score
+				return snake.score
 			timePast = newTimePast
 		
 
@@ -183,7 +187,8 @@ def snake(difficulty):
 		if (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and snake.facing[0].tolist() != [-1, 0]:
 			newFacing = [1, 0]
 		if keys[pygame.K_p]:
-			pause(pygame.display.get_surface())
+			if pause(pygame.display.get_surface()):
+				return snake.score
 
 
 		# Fill the background
@@ -250,6 +255,8 @@ def pause(bg):
 			pygame.transform.smoothscale(pauseText, (pauseTextWidth, pauseTextHeight))
 		)
 
+		if pygame.key.get_pressed()[pygame.K_SPACE]:
+			return -1
 		
 		if pauseButton.hover(pygame.mouse.get_pos()):
 			if pygame.mouse.get_pressed()[0]:
