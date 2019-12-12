@@ -19,10 +19,9 @@ os.system("cls")
 
 
 # Print that the game started
-if debug:
-	import shutil
-	columns = shutil.get_terminal_size((80, 20))[0]
-	print('<', '-'*int(0.5*columns-4.5), " BEGIN ", '-'*int(0.5*columns-4), '>', sep='')
+import shutil
+columns = shutil.get_terminal_size((80, 20))[0]
+print('<', '-'*int(0.5*columns-4.5), " BEGIN ", '-'*int(0.5*columns-4), '>', sep='')
 
 
 win = pygame.display.set_mode((width, height), pygame.RESIZABLE)
@@ -48,8 +47,7 @@ def updateWindow():
 			sys.exit(0)
 		elif event.type == pygame.VIDEORESIZE:
 			width, height = event.size
-			if debug:
-				print("[*] resizing to", width, height)
+			print("[*] resizing to", width, height)
 		
 		manager.process_events(event)
 
@@ -63,6 +61,7 @@ def deathScreen(score):
 
 def home():
 	playText = pygame.font.Font(gameFont, 200).render("PLAY", True, WHITE)
+	berryMode = False
 
 	slider = pygame_gui.elements.ui_horizontal_slider.UIHorizontalSlider(
 		pygame.Rect(
@@ -88,12 +87,17 @@ def home():
 			(width, height)
 		)
 
+		# Check if the B key is pressed to activate berry mode
+		if pygame.key.get_pressed()[pygame.K_b]:
+			berryMode = not berryMode
+			time.sleep(0.2)
+
 		# Draw background
 		win.blit(pygame.transform.scale2x(PIL_to_surface(background)), (0, 0))
 
 		# Update and draw playButton with playText and difficultyText on it
 		difficulty = int(round(slider.get_current_value()))
-		difficultyText = pygame.font.Font(gameFont, 200).render("level " + str(difficulty) + ('' if difficulty==10 else ' '), True, WHITE)
+		difficultyText = pygame.font.Font(gameFont, 200).render("level " + str(difficulty) + ('' if difficulty==10 else ('B' if berryMode else ' ')), True, WHITE)
 		fullPlayText = combineSufacesVertical(playText, difficultyText)
 		
 		_width, _height = min((width, height))/2*GOLDENRATIO, min((width, height))/2
@@ -121,7 +125,7 @@ def home():
 			playButton.color = (145, 34, 0)
 			if pygame.mouse.get_pressed()[0]:
 				slider.kill()
-				return difficulty
+				return difficulty, berryMode
 		else:
 			playButton.color = (123, 17, 19)
 
@@ -132,13 +136,15 @@ def home():
 		updateWindow()
 
 
-def snake(difficulty):
+def snake(difficulty, berryMode):
 	# Grid
 	global width, height
 	gridColor = (np.random.randint(0, 256), np.random.randint(0, 256), np.random.randint(0, 256))
 	gridBorderColor = (np.array(gridColor)*0.7).tolist()
 	
 	gridSize = -2*difficulty+29 # Calculate grid size with the formula: gridSize = -2 * difficulty + 27
+	print("[*] gridSize =", gridSize)
+	print(difficulty)
 
 	grid = obj.Grid(0, 0, 0, 0, gridSize//(int(berryMode)+1), gridSize, color=gridColor, boxBorderColor=gridColor if berryMode else gridBorderColor)
 	grid.width, grid.height = min((width, height))*0.8, min((width, height))*0.8
@@ -273,4 +279,4 @@ def pause(bg):
 		updateWindow()
 
 while True:
-	deathScreen(snake(home()))
+	deathScreen(snake(*home()))
