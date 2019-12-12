@@ -61,20 +61,17 @@ def mapArrayToRainBow(arr, length):
 
 
 # -- Run configurations --
-debug = True
 width, height = 800, 800 # Initial window dimensions
 
 
 # -- User Interface configurations --
-gameFont = "FSEX300.ttf"
+gameFont = "assets/FSEX300.ttf"
 startBgImage = Image.open("assets/brick.png")
 
 
 # -- Gameplay configurations --
 gamespeed = 10
 maxFPS = 60
-
-berryMode = True
 
 appleImage = Image.open("assets/apple.png")
 berryFruitImage = Image.open("assets/berryFruit.png")
