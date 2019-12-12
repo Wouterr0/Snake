@@ -1,5 +1,7 @@
 import math
 import time
+import csv
+import sys
 
 import numpy as np
 import pygame
@@ -16,6 +18,12 @@ pygame.mixer.init()
 
 # Clear debug cmd prompt
 os.system("cls")
+
+# Get username
+if len(sys.argv) <= 1:
+	username = None
+else:
+	username = sys.argv[1]
 
 
 # Print that the game started
@@ -54,9 +62,10 @@ def updateWindow():
 	pygame.display.flip()
 	return width, height
 
-
-def deathScreen(score):
-	pass
+def saveScore(username, score, difficulty, berryMode):
+	with open('highscore.csv', 'a', newline='') as f:
+		writer = csv.writer(f)
+		writer.writerow([username, difficulty, berryMode, score])
 
 
 def home():
@@ -97,7 +106,7 @@ def home():
 
 		# Update and draw playButton with playText and difficultyText on it
 		difficulty = int(round(slider.get_current_value()))
-		difficultyText = pygame.font.Font(gameFont, 200).render("level " + str(difficulty) + ('' if difficulty==10 else ('B' if berryMode else ' ')), True, WHITE)
+		difficultyText = pygame.font.Font(gameFont, 200).render("level " + str(difficulty) + (('B' if berryMode else ('' if difficulty==10 else ' '))), True, WHITE)
 		fullPlayText = combineSufacesVertical(playText, difficultyText)
 		
 		_width, _height = min((width, height))/2*GOLDENRATIO, min((width, height))/2
@@ -144,9 +153,9 @@ def snake(difficulty, berryMode):
 	
 	gridSize = -2*difficulty+29 # Calculate grid size with the formula: gridSize = -2 * difficulty + 27
 	print("[*] gridSize =", gridSize)
-	print(difficulty)
+	print("[*] difficulty = ", difficulty)
 
-	grid = obj.Grid(0, 0, 0, 0, gridSize//(int(berryMode)+1), gridSize, color=gridColor, boxBorderColor=gridColor if berryMode else gridBorderColor)
+	grid = obj.Grid(0, 0, 0, 0, gridSize//2*3 if berryMode else gridSize, gridSize, color=gridColor, boxBorderColor=gridColor if berryMode else gridBorderColor)
 	grid.width, grid.height = min((width, height))*0.8, min((width, height))*0.8
 	grid.x, grid.y = width/2-grid.width/2, height/2-grid.height/2
 	grid.updateBoxes()
@@ -176,7 +185,7 @@ def snake(difficulty, berryMode):
 			snake.facing[0] = newFacing
 
 			if snake.tick():			# Checks if snake has died in that gametick
-				return snake.score
+				return snake.score, difficulty, berryMode
 			timePast = newTimePast
 		
 
@@ -192,7 +201,7 @@ def snake(difficulty, berryMode):
 			newFacing = [1, 0]
 		if keys[pygame.K_p]:
 			if pause(pygame.display.get_surface()):
-				return snake.score
+				return snake.score, difficulty, berryMode
 
 
 		# Fill the background
@@ -212,7 +221,6 @@ def snake(difficulty, berryMode):
 		win.blit(scoreText, ((width - scoreText.get_width())/2, 0))
 		
 		width, height = updateWindow()
-
 
 
 def pause(bg):
@@ -279,4 +287,7 @@ def pause(bg):
 		updateWindow()
 
 while True:
-	deathScreen(snake(*home()))
+	score, difficulty, berryMode = snake(*home())
+	print("[*] Score was {} on difficulty {} with berry mode {}".format(score, difficulty, "on" if berryMode else "off"))
+	if username:
+		saveScore(username, score, difficulty, berryMode)

@@ -163,7 +163,6 @@ class Snake:
 			self.shape = np.vstack((self.shape, np.add(np.multiply(self.facing[-1], -1), self.shape[-1])))
 			self.facing = np.vstack((self.facing, self.facing[-1]))
 			self.colors = newColors
-		print(len(self.shape), len(self.facing), len(self.colors))
 
 
 
