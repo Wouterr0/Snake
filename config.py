@@ -74,7 +74,7 @@ startBgImage = Image.open("assets/brick.png")
 gamespeed = 10
 maxFPS = 60
 
-berryMode = True
+berryMode = False
 
 appleImage = Image.open("assets/apple.png")
 berryFruitImage = Image.open("assets/berryFruit.png")
@@ -96,7 +96,7 @@ FUCHSIA = (255, 0, 255)
 RED = (255, 0, 0)
 BROWN = (150, 75, 0)
 ORANGE = (255, 127, 0)
-JELLOW = (255, 255, 0)
+YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
 AQUA = (0, 255, 255)
 BLUE = (0, 0, 255)

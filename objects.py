@@ -136,7 +136,6 @@ class Snake:
 	def tick(self):
 		for i in range(len(self.shape)):
 			self.shape[i] = np.add(self.shape[i], self.facing[i])
-		self.facing[1:] = self.facing[:-1]
 
 		if any(pos[0] < 0 or pos[0] >= self.grid.columns or pos[1] < 0 or pos[1] >= self.grid.rows for pos in self.shape) or not cfg.unique(self.shape.tolist()):
 			return 1
@@ -146,14 +145,15 @@ class Snake:
 			self.score += 1
 			self.grow(cfg.mapArrayToRainBow(np.linspace(0, 1, len(self.colors)+1), len(self.shape)))
 			self.generateApple()
+		self.facing[1:] = self.facing[:-1]
 
 		self.updateBody()
 
 	def generateApple(self, amount=1):
 		while True:
 			generatedPosition = np.random.randint(0, self.grid.columns), np.random.randint(0, self.grid.rows)
-			if generatedPosition in self.shape: # Python equivalent of a do while loop
-				continue
+			if any([part == list(generatedPosition) for part in self.shape.tolist()]): # Check if generatedPosition is inside the snake
+				continue # Python equivalent of a do while loop
 			break
 		self.apple = Apple(*generatedPosition, self.grid, self.appleImage)
 
@@ -163,7 +163,7 @@ class Snake:
 			self.shape = np.vstack((self.shape, np.add(np.multiply(self.facing[-1], -1), self.shape[-1])))
 			self.facing = np.vstack((self.facing, self.facing[-1]))
 			self.colors = newColors
-		self.updateBody()
+		print(len(self.shape), len(self.facing), len(self.colors))
 
 
 

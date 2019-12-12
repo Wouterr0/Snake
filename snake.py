@@ -24,10 +24,9 @@ if debug:
 	columns = shutil.get_terminal_size((80, 20))[0]
 	print('<', '-'*int(0.5*columns-4.5), " BEGIN ", '-'*int(0.5*columns-4), '>', sep='')
 
-print(width, height)
 
 win = pygame.display.set_mode((width, height), pygame.RESIZABLE)
-manager = pygame_gui.UIManager((800, 800))
+manager = pygame_gui.UIManager((width, height))
 pygame.display.set_caption("Snake!")
 
 
@@ -140,10 +139,8 @@ def snake(difficulty):
 	gridBorderColor = (np.array(gridColor)*0.7).tolist()
 	
 	gridSize = -2*difficulty+29 # Calculate grid size with the formula: gridSize = -2 * difficulty + 27
-	print("gridSize =", gridSize)
-	print(difficulty)
 
-	grid = obj.Grid(0, 0, 0, 0, gridSize, gridSize, color=gridColor, boxBorderColor=gridColor if berryMode else gridBorderColor)
+	grid = obj.Grid(0, 0, 0, 0, gridSize//(int(berryMode)+1), gridSize, color=gridColor, boxBorderColor=gridColor if berryMode else gridBorderColor)
 	grid.width, grid.height = min((width, height))*0.8, min((width, height))*0.8
 	grid.x, grid.y = width/2-grid.width/2, height/2-grid.height/2
 	grid.updateBoxes()
@@ -171,6 +168,7 @@ def snake(difficulty):
 		if newTimePast != timePast:		# New game tick
 			print("[*] tick", round(timePast, 5))
 			snake.facing[0] = newFacing
+
 			if snake.tick():			# Checks if snake has died in that gametick
 				return snake.score
 			timePast = newTimePast
