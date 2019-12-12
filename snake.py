@@ -151,7 +151,7 @@ def snake(difficulty, berryMode):
 	gridColor = (np.random.randint(0, 256), np.random.randint(0, 256), np.random.randint(0, 256))
 	gridBorderColor = (np.array(gridColor)*0.7).tolist()
 	
-	gridSize = -2*difficulty+29 # Calculate grid size with the formula: gridSize = -2 * difficulty + 27
+	gridSize = -2*difficulty+29 # Calculate grid size with the formula: gridSize = -2 * difficulty + 29
 	print("[*] gridSize =", gridSize)
 	print("[*] difficulty = ", difficulty)
 
