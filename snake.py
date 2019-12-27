@@ -130,9 +130,9 @@ def home():
 
 
 
-		if playButton.hover(pygame.mouse.get_pos()):
+		if playButton.hover(pygame.mouse.get_pos()) or pygame.key.get_pressed()[pygame.K_RETURN]:
 			playButton.color = (145, 34, 0)
-			if pygame.mouse.get_pressed()[0]:
+			if pygame.mouse.get_pressed()[0] or pygame.key.get_pressed()[pygame.K_RETURN]:
 				slider.kill()
 				return difficulty, berryMode
 		else:
