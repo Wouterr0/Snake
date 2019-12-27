@@ -1,5 +1,3 @@
 TODO
- - Save highscore to disk
- - Berry easteregg
  - Deathscreen
  - Sounds
