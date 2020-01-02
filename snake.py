@@ -162,7 +162,7 @@ def snake(difficulty, berryMode):
 
 	# Snake
 	snake = obj.Snake(
-		[(initSnakeLength-i+1, grid.rows//2) for i in range(initSnakeLength)],
+		[(initSnakeLength-1-i, grid.rows//2) for i in range(initSnakeLength)],
 		(np.tile((1, 0), (initSnakeLength, 1))),
 		grid,
 		mapArrayToRainBow(np.linspace(0, 1, initSnakeLength), initSnakeLength),
