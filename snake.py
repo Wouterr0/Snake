@@ -60,6 +60,7 @@ def updateWindow():
 		manager.process_events(event)
 
 	pygame.display.flip()
+	return width, height
 
 def saveScore(username, score, difficulty, berryMode):
 	with open('highscore.csv', 'a', newline='') as f:
