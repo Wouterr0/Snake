@@ -22,4 +22,4 @@ niet smooth is. Er word dan gebruik gemaakt vab de [`combineSufacesVertical`](co
 
 ![equation](http://latex.codecogs.com/gif.latex?hoogte%3d50%5csin%5cleft%28%5cfrac%7bx%7d%7b10%7d%5cright%29%5ccdot1.03%5e%7b-x%7d%2b%5cleft%28100-1000%5cfrac%7b1%7d%7b2x%7d%5cright%29%5cleft%5c%7bx%3e0%5cright%5c%7d%5cleft%5c%7by%3e0%5cright%5c%7d1)
 
-waar x is de frames sinds de speler op <kbd>p</kbd> heeft gedrukt. De width is `φ * height`.
+waar x is de frames sinds de speler op <kbd>p</kbd> heeft gedrukt. De width is `φ * height` zodat de rechthoek een golden ratio heeft. De tekst is 90% van de de pauseknop. Als de speler op spatie drukt returned de functie met waarde -1. Dat betekend dat de speler naar het beginscherm terug wil.
