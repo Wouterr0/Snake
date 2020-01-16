@@ -60,7 +60,7 @@ def updateWindow():
 		manager.process_events(event)
 
 	pygame.display.flip()
-	return width, height
+
 
 def saveScore(username, score, difficulty, berryMode):
 	with open('highscore.csv', 'a', newline='') as f:
@@ -147,7 +147,6 @@ def home():
 
 def snake(difficulty, berryMode):
 	# Grid
-	global width, height
 	gridColor = (np.random.randint(0, 256), np.random.randint(0, 256), np.random.randint(0, 256))
 	gridBorderColor = (np.array(gridColor)*0.7).tolist()
 	
@@ -158,7 +157,6 @@ def snake(difficulty, berryMode):
 	grid = obj.Grid(0, 0, 0, 0, gridSize//2*3 if berryMode else gridSize, gridSize, color=gridColor, boxBorderColor=gridColor if berryMode else gridBorderColor)
 	grid.width, grid.height = min((width, height))*0.8, min((width, height))*0.8
 	grid.x, grid.y = width/2-grid.width/2, height/2-grid.height/2
-	grid.updateBoxes()
 
 	# Snake
 	snake = obj.Snake(
@@ -220,7 +218,7 @@ def snake(difficulty, berryMode):
 		scoreText = scoreFont.render(str(snake.score), True, WHITE)
 		win.blit(scoreText, ((width - scoreText.get_width())/2, 0))
 		
-		width, height = updateWindow()
+		updateWindow()
 
 
 def pause(bg):
