@@ -2,10 +2,10 @@
 
 ## snake.py
 Het bestand snake.py (het bestand dat wordt gestart om de game te starten) bestaat uit 4 belangrijke functies:
- - [updateWindow](README.nl.md#L12) <sub>\[[in file](snake.py#L40)\]</sub>
- - [home](README.nl.md#L15) <sub>\[[in file](snake.py#L71)\]</sub>
- - [snake](README.nl.md#L20) <sub>\[[in file](snake.py#L148)\]</sub>
- - [pause](README.nl.md#L23) <sub>\[[in file](snake.py#L224)\]</sub>
+ - [updateWindow](README.nl.md#updateWindow) <sub>\[[in file](snake.py#L40)\]</sub>
+ - [home](README.nl.md#home) <sub>\[[in file](snake.py#L71)\]</sub>
+ - [snake](README.nl.md#snake) <sub>\[[in file](snake.py#L148)\]</sub>
+ - [pause](README.nl.md#pause) <sub>\[[in file](snake.py#L224)\]</sub>
 
 Als het bestand wordt uitgevoerd, komt het in een eindeloze lus van `snake(*home())`.
 
